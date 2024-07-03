@@ -1,22 +1,27 @@
 const mysql = require("mysql");
+require("dotenv").config();
+
+const env = process.env;
 
 const dbConfig = {
-   host: "localhost",
-   user: "root",
-   password: "root1",
-   port: 3306,
-   database: "nodejs_mysql",
+   host: env.HOST,
+   user: env.USER,
+   password: env.PASSWORD,
+   port: env.PORT,
+   database: env.DATABASE,
 };
 
-const db = mysql.createConnection(dbConfig);
+const db = mysql.createPool(dbConfig);
 
 module.exports = (query) => {
-   return new Promise((reject, resolve) =>
-      db.connect((err) => {
+   return new Promise((resolve, reject) =>
+      db.getConnection((err, connection) => {
          if (err) {
             reject(err);
          } else {
-            db.query(query, (error, results) => {
+            connection.query(query, (error, results) => {
+               connection.release();
+
                if (error) {
                   reject(error);
                } else {
