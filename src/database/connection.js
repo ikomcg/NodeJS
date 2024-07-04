@@ -13,16 +13,17 @@ const dbConfig = {
 
 const db = mysql.createPool(dbConfig);
 
-module.exports = (query) => {
+module.exports = (query, exectQuery) => {
    return new Promise((resolve, reject) =>
       db.getConnection((err, connection) => {
          if (err) {
+            console.log("Err get connection :", err);
             reject(err);
          } else {
-            connection.query(query, (error, results) => {
+            connection.query(query, exectQuery, (error, results) => {
                connection.release();
-
                if (error) {
+                  console.log("Err query connection :", error);
                   reject(error);
                } else {
                   resolve(results);

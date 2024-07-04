@@ -5,12 +5,13 @@ module.exports = async (id, name, address) => {
       const query = `UPDATE 
                         account 
                     SET 
-                        username = '${name}', 
+                        name = '${name}', 
                         address = '${address}' 
                         WHERE id = ${id}`;
 
-      await connection(query);
-      return true;
+      const data = await connection(query);
+      return data;
+      
    } catch (error) {
       return false;
    }

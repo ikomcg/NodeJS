@@ -12,9 +12,7 @@ router.post("/create/accounts", async (req, res) => {
    const results = await CreateService(name, address);
 
    if (results) {
-      res.status(200).send({
-         message: "Successfull Created",
-      });
+      res.status(200).send({ ...req.body });
    } else {
       res.status(500).send({
          message: "Failed to Create",
@@ -23,7 +21,12 @@ router.post("/create/accounts", async (req, res) => {
 });
 
 router.get("/list", async (req, res) => {
-   const results = await RetrieveService();
+   const { limit, page, search } = req.query;
+
+   const limitValue = parseInt(limit, 10) || 10;
+   const pageValue = parseInt(page, 10) || 1;
+
+   const results = await RetrieveService(limitValue, pageValue, search || "");
 
    if (results) {
       res.status(200).send(results);
@@ -43,6 +46,24 @@ router.delete("/delete", async (req, res) => {
    } else {
       res.status(500).send({
          message: "Failed to Delete",
+      });
+   }
+});
+
+router.patch("/update", async (req, res) => {
+   const { name, address } = req.body;
+   const { id } = req.query;
+
+   const results = await UpdateService(id, name, address);
+
+   if (results) {
+      res.status(200).send({
+         id,
+         ...req.body,
+      });
+   } else {
+      res.status(500).send({
+         message: "Failed to Update",
       });
    }
 });
