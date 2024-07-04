@@ -17,5 +17,5 @@ const account = require("./routes/accounts");
 app.use("/accounts", account);
 
 app.listen(port, () => {
-   console.log("listening on port", port);
+   console.log("listening on port =>", port);
 });
